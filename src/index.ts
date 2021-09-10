@@ -1,16 +1,11 @@
 require('dotenv').config()
 import 'reflect-metadata'
-import { AppServer, Socket } from './cores';
-import MongoProvider from './providers/mongo';
+import { AppServer, SocketClusterServer } from './cores';
+import { postGresConfig , socketPort , serverPort } from './includes/config';
+import PostGres from './providers/postgres';
 
 (async () => {
-  await MongoProvider.connect({
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  const server = new AppServer({ debug: process.env.DEBUG === 'true' });
-  const socket = new Socket()
-  await  socket.attach(server)
-  server.run(8000)
+  await PostGres.connect(postGresConfig)
+  new AppServer({ debug: process.env.DEBUG === 'true' }).run(serverPort);
+  new SocketClusterServer().run(socketPort)
 })();

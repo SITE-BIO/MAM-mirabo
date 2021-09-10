@@ -1,29 +1,19 @@
-export const port = process.env.PORT || 3000;
+require('dotenv').config()
+import { SequelizeOptions } from "sequelize-typescript";
+import { PlcData } from "../models/plc_data";
+import { PlcSpec } from "../models/plc_specs";
 
-/**
- * Databases
- */
-export const mongoConnectionString = process.env.MONGO_CONNECTION_STRING || '';
+export const socketPort = parseInt(process.env.SOCKET_PORT, 10) || 9999;
 
-export const allowedIp = process.env.ALLOW_RECHARGE_IP || '127.0.0.1';
+export const serverPort = parseInt(process.env.SERVER_PORT, 10) || 8888;
 
-export const mailConfig: any = {
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_SECCURE === 'true' ? true : false,
-    auth: {
-        user: process.env.SMTP_AUTH_USER,
-        pass: process.env.SMTP_AUTH_PASS,
-    },
+export const postGresConfig: SequelizeOptions = {
+    host: process.env.DB_HOST || '103.141.144.198',
+    database: process.env.DB_DATABASE || 'appsim_order',
+    dialect: 'postgres',
+    username: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASS || 'Appsim2020',
+    port: parseInt(process.env.DB_PORT, 10) || 5432,
+    models: [PlcData, PlcSpec],
 }
 
-export const mailjetConfig = {
-    api_key: process.env.MAILJET_API_KEY,
-    secret: process.env.MAILJET_SECRET,
-    sender: process.env.SENDER_EMAIL,
-    receiver: process.env.RECEIVER_EMAIL,
-}
-
-
-export const rabbitMqUrl = process.env.RABBIT_MQ_URL
-export const rabbitMqQueue = process.env.RABBIT_MQ_QUEUE
